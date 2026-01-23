@@ -1,0 +1,28 @@
+---
+import GitHub from './icons/GitHub.astro';
+import LinkedIn from './icons/LinkedIn.astro';
+import Email from './icons/Email.astro';
+import { siteConfig } from '../data/site';
+
+const links = [
+  { href: siteConfig.links.github, icon: GitHub, label: 'GitHub' },
+  { href: siteConfig.links.linkedin, icon: LinkedIn, label: 'LinkedIn' },
+  { href: siteConfig.links.email, icon: Email, label: 'Email' },
+];
+---
+
+<div class="flex items-center gap-4">
+  {
+    links.map((link) => (
+      <a
+        href={link.href}
+        target={link.href.startsWith('mailto') ? undefined : '_blank'}
+        rel={link.href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
+        class="text-muted hover:text-foreground transition-colors"
+        aria-label={link.label}
+      >
+        <link.icon class="w-5 h-5" />
+      </a>
+    ))
+  }
+</div>

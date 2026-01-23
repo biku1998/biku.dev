@@ -1,0 +1,157 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist-mono";
+
+@plugin "@tailwindcss/typography";
+
+/* Theme Configuration via CSS Variables (Tailwind v4 approach) */
+@theme {
+  --font-sans: "Geist Mono Variable", ui-monospace, monospace;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+}
+
+/* Custom CSS Variables for theming */
+:root {
+  --color-background: #fafafa;
+  --color-foreground: #171717;
+  --color-muted: #737373;
+  --color-border: #e5e5e5;
+  --color-card: #ffffff;
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+}
+
+/* Dark mode overrides */
+.dark {
+  --color-background: #0a0a0a;
+  --color-foreground: #fafafa;
+  --color-muted: #a3a3a3;
+  --color-border: #262626;
+  --color-card: #171717;
+  --color-accent: #3b82f6;
+  --color-accent-hover: #60a5fa;
+}
+
+/* Base styles */
+html {
+  font-family: var(--font-mono);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth theme transitions */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
+}
+
+/* Custom utility classes */
+.bg-background {
+  background-color: var(--color-background);
+}
+
+.bg-foreground {
+  background-color: var(--color-foreground);
+}
+
+.bg-muted {
+  background-color: var(--color-muted);
+}
+
+.bg-border {
+  background-color: var(--color-border);
+}
+
+.bg-card {
+  background-color: var(--color-card);
+}
+
+.bg-accent {
+  background-color: var(--color-accent);
+}
+
+.text-foreground {
+  color: var(--color-foreground);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.border-border {
+  border-color: var(--color-border);
+}
+
+.hover\:text-accent:hover {
+  color: var(--color-accent);
+}
+
+.hover\:text-foreground:hover {
+  color: var(--color-foreground);
+}
+
+.hover\:bg-card:hover {
+  background-color: var(--color-card);
+}
+
+.hover\:bg-border:hover {
+  background-color: var(--color-border);
+}
+
+.hover\:border-border:hover {
+  border-color: var(--color-border);
+}
+
+/* Prose styling for blog content */
+.prose {
+  --tw-prose-body: var(--color-foreground);
+  --tw-prose-headings: var(--color-foreground);
+  --tw-prose-links: var(--color-accent);
+  --tw-prose-bold: var(--color-foreground);
+  --tw-prose-code: var(--color-foreground);
+  --tw-prose-pre-bg: var(--color-card);
+  --tw-prose-pre-code: var(--color-foreground);
+  --tw-prose-quotes: var(--color-muted);
+  --tw-prose-hr: var(--color-border);
+}
+
+.dark .prose {
+  --tw-prose-invert-body: var(--color-foreground);
+  --tw-prose-invert-headings: var(--color-foreground);
+  --tw-prose-invert-links: var(--color-accent);
+  --tw-prose-invert-bold: var(--color-foreground);
+  --tw-prose-invert-code: var(--color-foreground);
+  --tw-prose-invert-pre-bg: var(--color-card);
+  --tw-prose-invert-pre-code: var(--color-foreground);
+  --tw-prose-invert-quotes: var(--color-muted);
+  --tw-prose-invert-hr: var(--color-border);
+}
+
+/* Link underline style */
+.link-underline {
+  text-decoration: underline;
+  text-underline-offset: 2.5px;
+  text-decoration-color: var(--color-muted);
+}
+
+.link-underline:hover {
+  text-decoration-color: var(--color-accent);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-accent);
+  color: white;
+}

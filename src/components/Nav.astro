@@ -1,0 +1,27 @@
+---
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/blog', label: 'Blog' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="flex items-center gap-6 text-sm">
+  {
+    navItems.map((item) => (
+      <a
+        href={item.href}
+        class:list={[
+          'transition-colors hover:text-accent',
+          currentPath === item.href ||
+          (item.href !== '/' && currentPath.startsWith(item.href))
+            ? 'text-foreground'
+            : 'text-muted',
+        ]}
+      >
+        {item.label}
+      </a>
+    ))
+  }
+</nav>

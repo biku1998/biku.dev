@@ -1,0 +1,29 @@
+---
+interface Props {
+  tag: string;
+  size?: 'sm' | 'md';
+  linked?: boolean;
+}
+
+const { tag, size = 'md', linked = false } = Astro.props;
+
+const sizeClasses = {
+  sm: 'text-xs px-1.5 py-0.5',
+  md: 'text-sm px-2 py-1',
+};
+
+const baseClasses = `inline-block rounded bg-border/50 text-muted ${sizeClasses[size]}`;
+---
+
+{
+  linked ? (
+    <a
+      href={`/tags/${tag}`}
+      class={`${baseClasses} hover:bg-border hover:text-foreground transition-colors`}
+    >
+      {tag}
+    </a>
+  ) : (
+    <span class={baseClasses}>{tag}</span>
+  )
+}

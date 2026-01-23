@@ -1,11 +1,81 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import PageLayout from '../layouts/PageLayout.astro';
+import Timeline from '../components/Timeline.astro';
+import { getCollection } from 'astro:content';
+import { formatDateShort } from '../lib/utils';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const recentPosts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<PageLayout
+  title="Sourabh Kumar"
+  description="Product Engineer and Head of Engineering at Enqurious. Building learning platforms and AI-powered tools."
+>
+  <section class="space-y-6">
+    <h1 class="text-2xl md:text-3xl font-bold">Hey, I'm Sourabh Kumar</h1>
+
+    <div class="space-y-4 text-muted leading-relaxed">
+      <p>
+        I'm a <strong class="text-foreground">Product Engineer</strong> and
+        <strong class="text-foreground">Head of Engineering and Product</strong> at
+        <a
+          href="https://enqurious.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-accent hover:underline underline-offset-2"
+        >
+          Enqurious
+        </a>, where I've spent the last 5+ years building learning platforms that help people
+        grow.
+      </p>
+
+      <p>
+        I work across the full stack, with a focus on
+        <strong class="text-foreground">React</strong>,
+        <strong class="text-foreground">TypeScript</strong>,
+        <strong class="text-foreground">Next.js</strong>, and
+        <strong class="text-foreground">Tailwind CSS</strong>. Lately, I've been exploring AI
+        agents and how they can augment developer workflows.
+      </p>
+
+      <p>
+        Outside of work, I write about engineering, product thinking, and lessons learned building
+        software at scale.
+      </p>
+    </div>
+  </section>
+
+  <Timeline />
+
+  {
+    recentPosts.length > 0 && (
+      <section class="mt-12">
+        <h2 class="text-lg font-medium mb-6">Recent Writing</h2>
+        <ul class="space-y-4">
+          {recentPosts.map((post) => (
+            <li>
+              <a
+                href={`/blog/${post.id}`}
+                class="group flex justify-between items-baseline gap-4"
+              >
+                <span class="group-hover:text-accent transition-colors">{post.data.title}</span>
+                <span class="text-sm text-muted shrink-0">
+                  {formatDateShort(post.data.pubDate)}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <a
+          href="/blog"
+          class="inline-block mt-6 text-sm text-accent hover:underline underline-offset-2"
+        >
+          View all posts →
+        </a>
+      </section>
+    )
+  }
+</PageLayout>
