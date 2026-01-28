@@ -4,7 +4,7 @@ export const siteConfig = {
   description:
     'Product Engineer and Head of Engineering at Enqurious. Building learning platforms and AI-powered tools.',
   url: 'https://biku.dev',
-  ogImage: '/og-image.png',
+  ogImage: '/me-talking-tech-sparks.webp',
   author: {
     name: 'Sourabh Kumar',
     email: 'kumarsourabh228@gmail.com',
