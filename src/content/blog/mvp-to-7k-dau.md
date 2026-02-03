@@ -9,7 +9,7 @@ In 2020, we weren't "building a product." We were duct-taping an experiential up
 
 It worked, until it didn't.
 
-Our client (Fractal Analytics) wanted more than training delivery. They wanted **skill analytics insights**: not just "who attended," but **who improved, where the gaps were, and how the cohort was drifting week to week**.
+Our first client (Fractal Analytics) wanted more than training delivery. They wanted **skill analytics insights**: not just "who attended," but **who improved, where the gaps were, and how the cohort was drifting week to week**.
 
 So we built an MVP.
 
