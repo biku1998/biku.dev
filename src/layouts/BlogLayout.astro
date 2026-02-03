@@ -1,7 +1,14 @@
 ---
 import PageLayout from './PageLayout.astro';
 import TagBadge from '../components/TagBadge.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 import { formatDate } from '../lib/utils';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
 
 interface Props {
   title: string;
@@ -9,9 +16,13 @@ interface Props {
   pubDate: Date;
   tags?: string[];
   image?: string;
+  headings?: Heading[];
 }
 
-const { title, description, pubDate, tags = [], image } = Astro.props;
+const { title, description, pubDate, tags = [], image, headings = [] } = Astro.props;
+
+// Show TOC only for longer posts (5+ headings)
+const showToc = headings.filter((h) => h.depth === 2 || h.depth === 3).length >= 5;
 ---
 
 <PageLayout title={title} description={description} image={image} article={true}>
@@ -33,6 +44,8 @@ const { title, description, pubDate, tags = [], image } = Astro.props;
         }
       </div>
     </header>
+
+    {showToc && <TableOfContents headings={headings} />}
 
     <div class="prose prose-neutral dark:prose-invert max-w-none">
       <slot />
