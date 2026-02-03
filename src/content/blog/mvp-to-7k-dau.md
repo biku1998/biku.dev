@@ -200,6 +200,8 @@ The stack was intentionally boring:
 - SendGrid
 - No queues early
 
+The MVP stack was intentionally barebones. Since then, the platform has matured significantly: deployment, observability, and data workflows especially. **I'll cover the "what changed and why" in a follow-up post**.
+
 The leverage decisions weren't "which framework." They were:
 
 ### 1) Modular boundaries early, abstraction later
