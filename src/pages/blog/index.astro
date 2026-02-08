@@ -1,6 +1,7 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
+import { getReadingTime } from '../../lib/utils';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog'))
@@ -39,6 +40,7 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
           slug={post.id}
           pubDate={post.data.pubDate}
           tags={post.data.tags}
+          readingTime={getReadingTime(post.body)}
         />
       ))
     }

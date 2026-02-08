@@ -1,6 +1,7 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
+import { getReadingTime } from '../../lib/utils';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -39,6 +40,7 @@ const { tag, posts } = Astro.props;
           slug={post.id}
           pubDate={post.data.pubDate}
           tags={post.data.tags}
+          readingTime={getReadingTime(post.body)}
         />
       ))
     }

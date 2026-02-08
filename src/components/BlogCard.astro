@@ -8,9 +8,10 @@ interface Props {
   slug: string;
   pubDate: Date;
   tags?: string[];
+  readingTime?: string;
 }
 
-const { title, description, slug, pubDate, tags = [] } = Astro.props;
+const { title, description, slug, pubDate, tags = [], readingTime } = Astro.props;
 ---
 
 <article class="group">
@@ -28,6 +29,7 @@ const { title, description, slug, pubDate, tags = [] } = Astro.props;
       <time datetime={pubDate.toISOString()}>
         {formatDate(pubDate)}
       </time>
+      {readingTime && <span>{readingTime}</span>}
       {
         tags.length > 0 && (
           <div class="flex flex-wrap gap-1.5">
