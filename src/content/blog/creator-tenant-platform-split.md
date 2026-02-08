@@ -121,7 +121,7 @@ Once boundaries were real, several things got better quickly:
 * **Fewer regressions**: creator experiments stopped spilling into learner/client-critical flows.
 * **Parallel workstreams** became normal: teams could move faster without stepping on each other.
 
-In practice, velocity felt roughly **~1.5× faster** across the board because we removed the biggest tax: *coupling*.
+In practice, anecdotally, velocity felt roughly **~1.5× faster** across the board because we removed the biggest tax: *coupling*.
 
 ## The tradeoff: more contracts, more deployments
 
