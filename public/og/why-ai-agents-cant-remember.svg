@@ -1,0 +1,82 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Dot grid pattern for texture -->
+    <pattern id="dots" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#1e1e1e"/>
+    </pattern>
+    <!-- Fade gradient: left edge of dot region blends into background -->
+    <linearGradient id="dotFade" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#0a0a0a" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+
+  <!-- Dot grid — right half only -->
+  <rect x="640" y="0" width="560" height="630" fill="url(#dots)"/>
+  <!-- Soft left-fade over dot grid -->
+  <rect x="640" y="0" width="320" height="630" fill="url(#dotFade)"/>
+
+  <!-- Left blue accent bar -->
+  <rect x="80" y="80" width="4" height="470" fill="#3b82f6" rx="2"/>
+
+  <!-- Tags -->
+  <text
+    x="112" y="122"
+    font-family="ui-monospace, 'Courier New', Courier, monospace"
+    font-size="13"
+    font-weight="500"
+    letter-spacing="3"
+    fill="#3d3d3d"
+  >ENGINEERING · AI · PRODUCT</text>
+
+  <!-- Title: line 1 -->
+  <text
+    x="112" y="282"
+    font-family="ui-monospace, 'Courier New', Courier, monospace"
+    font-size="74"
+    font-weight="700"
+    fill="#fafafa"
+  >Your AI Has</text>
+
+  <!-- Title: line 2 — "Digital" white, "Amnesia." blue -->
+  <text
+    x="112" y="374"
+    font-family="ui-monospace, 'Courier New', Courier, monospace"
+    font-size="74"
+    font-weight="700"
+  >
+    <tspan fill="#fafafa">Digital </tspan><tspan fill="#3b82f6">Amnesia.</tspan>
+  </text>
+
+  <!-- Tagline -->
+  <text
+    x="112" y="450"
+    font-family="ui-monospace, 'Courier New', Courier, monospace"
+    font-size="20"
+    fill="#4a4a4a"
+  >And the fix is harder than anyone admits.</text>
+
+  <!-- Separator line -->
+  <rect x="80" y="516" width="1040" height="1" fill="#1f1f1f"/>
+
+  <!-- Author -->
+  <text
+    x="112" y="568"
+    font-family="ui-monospace, 'Courier New', Courier, monospace"
+    font-size="18"
+    font-weight="600"
+    fill="#3b82f6"
+  >Sourabh Kumar</text>
+
+  <!-- Site URL — right-aligned -->
+  <text
+    x="1120" y="568"
+    font-family="ui-monospace, 'Courier New', Courier, monospace"
+    font-size="18"
+    fill="#3d3d3d"
+    text-anchor="end"
+  >biku.dev</text>
+</svg>
