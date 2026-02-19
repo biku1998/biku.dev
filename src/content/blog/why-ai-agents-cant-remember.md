@@ -17,7 +17,7 @@ You've told your AI health coach about your knee injury four times. It keeps sug
 
 It's gone. Every bit of it. Every time.
 
-I've been building a memory layer for LLM agents for the past few months — [memo-mesh](https://github.com/biku1998/memo-mesh), a self-hostable, evidence-first system for persistent agent context. That work forced me to understand this problem more deeply than any article I read about it. This post is what I actually learned.
+I've been building a memory layer for LLM agents for the past few weeks — [memo-mesh](https://github.com/biku1998/memo-mesh), a self-hostable, evidence-first system for persistent agent context. That work forced me to understand this problem more deeply than any article I read about it. This post is what I actually learned.
 
 The short version: memory is not a solved problem. Not even close.
 
@@ -41,7 +41,7 @@ Memory isn't about whether the data exists somewhere. It's about retrieving the 
 
 ### "Fine-tune the model."
 
-Fine-tuning bakes information into model weights. Even with parameter-efficient methods like LoRA that have reduced the cost considerably, none of them solve the real-time update problem. If a user changes their preference today, fine-tuning can't respond until the next training cycle. More fundamentally: fine-tuning mixes *memory* (what this person told us) with *capability* (how the model reasons). You can't change what the model remembers without risk of changing how it thinks.
+Fine-tuning bakes information into model weights. Even with parameter-efficient methods like LoRA that have reduced the cost considerably, none of them solve the real-time update problem. If a user changes their preference today, fine-tuning can't respond until the next training cycle. More fundamentally: fine-tuning mixes _memory_ (what this person told us) with _capability_ (how the model reasons). You can't change what the model remembers without risk of changing how it thinks.
 
 The common thread across all three: they treat memory as a storage problem. It isn't. **Memory is a structured recall problem.** That distinction matters enormously for how you design a system to solve it.
 
@@ -105,7 +105,7 @@ Memories go stale. Silently.
 
 Here's what this looks like in practice: a customer contacts your support agent in January and mentions they're on the Basic plan. That fact gets stored. In April, they upgrade to Premium. Nobody in that conversation explicitly says "I'm on Premium now" — they just start asking Premium-level questions. The old Basic fact never gets contradicted. It just coexists with the new behavior. In July, your agent recommends a workaround for a limitation that hasn't applied to them for three months. The customer is frustrated. Your support team has no idea why the agent said that.
 
-Neither Mem0 nor Supermemory has a principled answer to: *how does a memory know when to question its own validity?* The current approach — let consolidation handle contradictions when they surface — only works when contradictions are explicit. Most of the time, they aren't.
+Neither Mem0 nor Supermemory has a principled answer to: _how does a memory know when to question its own validity?_ The current approach — let consolidation handle contradictions when they surface — only works when contradictions are explicit. Most of the time, they aren't.
 
 **2. Conflict resolution under ambiguity**
 
@@ -143,7 +143,7 @@ Two threads are converging that will shape this space over the next year.
 
 **MCP as the distribution layer.** When memory becomes an MCP server, it decouples from any specific product or provider. Your memory layer becomes infrastructure — the same way a database is infrastructure. This is exactly the right framing: memory shouldn't be a feature baked into your AI assistant, it should be a capability your assistant plugs into. Any agent, any model, any platform.
 
-**The self-hosted moment.** The enterprises and businesses who matter most in production AI won't route long-term customer and user context through a cloud API they don't control. The same dynamic that created serious markets for self-hosted vector databases and on-prem LLM inference is arriving for memory. The difference: memory data is *more* sensitive than vectors or weights, because it's interpretable. Anyone can read a memory store and understand exactly what it reveals about your users.
+**The self-hosted moment.** The enterprises and businesses who matter most in production AI won't route long-term customer and user context through a cloud API they don't control. The same dynamic that created serious markets for self-hosted vector databases and on-prem LLM inference is arriving for memory. The difference: memory data is _more_ sensitive than vectors or weights, because it's interpretable. Anyone can read a memory store and understand exactly what it reveals about your users.
 
 Whoever builds the self-hosted memory stack that production teams actually trust will own a foundational layer of the agent ecosystem.
 
