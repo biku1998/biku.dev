@@ -20,7 +20,7 @@ I've been building a memory layer for LLM agents for the past few months — [me
 
 The short version: memory is not a solved problem. Not even close.
 
-The space has gotten serious fast. Mem0 raised $24M from YC, Peak XV, and Basis Set. Supermemory — founded by a 19-year-old — is backed by Jeff Dean, Google's AI chief. AWS selected Mem0 as a memory provider for its Agent SDK. The money has noticed. The infrastructure is being built.
+The space has gotten serious fast. Mem0 raised $24M from YC, Peak XV, and Basis Set. Supermemory — founded by Dhravya Shah — raised a ~$2.6M seed co-led by Susa Ventures and Browder Capital, with Jeff Dean of Google as an angel investor. AWS selected Mem0 as a memory provider for its Agent SDK. The money has noticed. The infrastructure is being built.
 
 And still, most agents in production treat every conversation like the first one. Here's why.
 
