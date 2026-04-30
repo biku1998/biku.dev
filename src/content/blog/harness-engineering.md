@@ -59,23 +59,23 @@ The implication is awkward for teams who treat model selection as the most impor
 
 Across the OpenAI report, Anthropic's writing, Hashimoto, and Fowler, the components keep showing up. Four pieces:
 
-**1. A project instruction file at the root of the repo.**
+### 1) A project instruction file at the root of the repo
 
 CLAUDE.md, AGENTS.md. Same idea under different names. The project's purpose, its structure, the build commands, the conventions, and a growing list of "things this agent has done wrong before." It's not a prompt; it's a contract that loads into every session. You add a line every time the agent makes a mistake worth not repeating.
 
 This is the cheapest, highest-leverage piece of harness work most teams skip.
 
-**2. Hard architectural constraints.**
+### 2) Hard architectural constraints
 
 [OpenAI's Codex team](https://openai.com/index/harness-engineering/) described enforcing a strict layered architecture where each domain had rigid dependency rules: code could only import from adjacent layers, enforced by custom linters and structural tests on every PR. No agent could bypass them. No prompt instruction could either.
 
 The principle: if you don't want the agent to do something, the system should make it impossible, not merely discouraged.
 
-**3. Feedback loops the agent can run itself.**
+### 3) Feedback loops the agent can run itself
 
 Tests, type checkers, linters, CI: all exposed in a way the agent can invoke before declaring a task done. The pattern that keeps showing up: agents are surprisingly good at fixing their own mistakes when they can verify them, and surprisingly bad when they can't. The harness's job is to make verification cheap and the answer unambiguous.
 
-**4. Cleanup agents that fight entropy.**
+### 4) Cleanup agents that fight entropy
 
 The harness isn't only about preventing initial mistakes. It actively fights drift, running periodically to find inconsistencies in documentation, violations of architectural constraints, dead code paths that snuck in across sessions. This is the most underrated piece. Without it, every harness gradually decays as the codebase moves underneath it.
 
