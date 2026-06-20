@@ -65,14 +65,14 @@ Back to `llama3:8b-instruct-q4_K_M`. Now you can read it:
 
 So `q4_K_M` is the sweet-spot default most people recommend: 4-bit, mixed precision, medium variant. `q8_0` is 8-bit (higher quality, double the size). A plain `q4_0` is older-style uniform 4-bit, generally skip it in favor of the `_K_` versions.
 
-You'll also run into format names outside Ollama. These are the *methods* used to do the quantizing:
+You'll also run into format names outside Ollama. Your real question isn't "what is AWQ" but "which one do I download?" So here's the decision, not the dictionary:
 
-- **GGUF** is the format Ollama and llama.cpp use. One self-contained file, runs great on CPU or split between CPU and GPU. This is what those `q4_K_M`-style tags come from.
-- **AWQ** protects the most important weights (found by watching which ones drive the biggest activations) so 4-bit rounding doesn't damage them. The go-to for fast, quality-sensitive **GPU** serving.
-- **GPTQ** uses a small calibration dataset to round each layer in a way that keeps its *output* close to the original. Another strong GPU option.
-- **NF4** is a 4-bit format whose steps are spaced to match that bell-curve shape of weights. It's what QLoRA uses to fine-tune big models on consumer hardware.
+- **GGUF:** *Running locally on Ollama or llama.cpp? It's always this. Ignore the rest.* One self-contained file that runs on CPU or splits across CPU and GPU, and where those `q4_K_M`-style tags come from.
+- **AWQ:** *Serving on GPUs via vLLM or TGI and quality matters? Make this your default.* It protects the most important weights so 4-bit rounding doesn't damage the output.
+- **GPTQ:** *Also for GPU serving; reach for it when AWQ isn't published for the model you want.* It uses calibration data to round each layer so its output stays close to the original.
+- **NF4:** *Only relevant if you're fine-tuning, not just running.* It's the 4-bit format QLoRA uses to train big models on consumer hardware.
 
-For local use, you'll mostly live in GGUF land. The others matter once you're serving on GPUs.
+The short version: local means GGUF, GPU serving means AWQ (then GPTQ as fallback), fine-tuning means NF4. For most people reading this, it's GGUF and you never think about the others.
 
 ## How much quality do you really lose?
 
@@ -87,6 +87,12 @@ And here's the rule of thumb that should drive your downloads:
 
 A 70B model at `q4` will run circles around an 8B model at `q8`, even though they take up similar disk space. So the move is: pick the *largest* model your hardware can hold, then choose the quantization that makes it fit, not the other way around.
 
+## And yes, it's faster too
+
+Smaller weights don't just save space, they move through the system faster. On the same hardware, a 4-bit model usually loads quicker and generates tokens roughly 1.5–2x faster than its FP16 equivalent.
+
+The reason is worth knowing, because it's a common misconception: quantization doesn't reduce the *number* of calculations (the math operations are unchanged), it reduces how much *data* has to move. Since memory bandwidth, not raw compute, is the real bottleneck during inference, shuttling smaller numbers around is a genuine, measurable speedup, not just a smaller download.
+
 ## A practical download guide
 
 When you're staring at the Ollama or Hugging Face list, this is the decision in plain terms:
@@ -96,14 +102,13 @@ When you're staring at the Ollama or Hugging Face list, this is the decision in 
 - **Tight on memory?** Drop to `q4_K_S` or a smaller model. Below 4-bit (2–3 bit) quality starts falling off a cliff; only go there if you truly must.
 - **Maximize the model, not the bits.** Given a memory budget, a larger model quantized harder usually wins.
 
-## When to be careful
+## The mistake that will cost you days
 
-Quantization is nearly free for chat, coding help, summarization, and general tasks. But precision loss bites harder in a few places:
+Quantization is nearly free for chat, coding help, summarization, and most general tasks. But there are two places where aggressive quantization quietly breaks production systems, and this is the section to actually remember.
 
-- **High-stakes text** like legal, medical, and compliance, where the model occasionally dropping a clause or flipping a negation is a real liability. Lean toward `q8` or full precision here.
-- **Embedding models** for semantic search. They're unusually sensitive; a 4-bit embedding model produces subtly shifted vectors that quietly degrade retrieval in ways that are painful to debug. Keep these at high precision.
+**Never quantize embedding models for search or RAG.** This is the one that burns people. Embedding models are unusually sensitive to precision loss: a 4-bit version produces subtly shifted vectors, and that shift silently degrades retrieval. Nothing crashes. No error shows up. Your RAG pipeline just starts surfacing slightly-wrong chunks, and you can lose *days* digging through your prompts and chunking logic when the real culprit was the quantized embedding model. Keep embedding models at full precision. Always.
 
-One more honest caveat: quantization shrinks *memory*, not *compute*. The number of calculations stays the same; you're just moving smaller numbers around faster. Since memory bandwidth is usually the real bottleneck during inference, you still get a genuine speedup. It's just not magic.
+**Be conservative with high-stakes text.** For legal, medical, or compliance work, the model occasionally dropping a clause or flipping a negation isn't a cosmetic glitch, it's a liability. Lean toward `q8` or full precision, and validate carefully before you trust it.
 
 ## The one-paragraph takeaway
 

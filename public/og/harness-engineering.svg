@@ -30,7 +30,7 @@
     font-weight="600"
     letter-spacing="3"
     fill="#475569"
-  >ENGINEERING · AI · PRODUCT</text>
+  >ENGINEERING · AI · AGENTS</text>
 
   <!-- Title: line 1 -->
   <text
@@ -39,16 +39,16 @@
     font-size="74"
     font-weight="700"
     fill="#0f172a"
-  >Your AI Has</text>
+  >The prompt</text>
 
-  <!-- Title: line 2 — "Digital" near-black, "Amnesia." blue -->
+  <!-- Title: line 2 — "isn't the" near-black, "fix." blue -->
   <text
     x="112" y="374"
     font-family="ui-monospace, 'Courier New', Courier, monospace"
     font-size="74"
     font-weight="700"
   >
-    <tspan fill="#0f172a">Digital</tspan><tspan fill="#1d4ed8" dx="42">Amnesia.</tspan>
+    <tspan fill="#0f172a">isn't the</tspan><tspan fill="#1d4ed8" dx="42">fix.</tspan>
   </text>
 
   <!-- Tagline -->
@@ -58,7 +58,7 @@
     font-size="20"
     font-weight="500"
     fill="#475569"
-  >And the fix is harder than anyone admits.</text>
+  >It's the harness. Same model, 6x the results.</text>
 
   <!-- Separator line -->
   <rect x="80" y="516" width="1040" height="1" fill="#e2e8f0"/>
