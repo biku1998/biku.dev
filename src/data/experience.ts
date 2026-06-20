@@ -9,16 +9,23 @@ export interface Experience {
 
 export const experiences: Experience[] = [
   {
+    company: 'QualityKiosk',
+    role: 'Technical Lead',
+    period: 'May 2026 - Present',
+    description:
+      'Working closely with the CTO on AI initiatives and products.',
+    current: true,
+  },
+  {
     company: 'Enqurious',
     role: 'Head of Engineering and Product',
-    period: 'Nov 2025 - Present',
+    period: 'Nov 2025 - May 2026',
     description:
       'Owning end-to-end product strategy and engineering delivery for the company\'s multiple platforms.',
     highlights: [
       'Lead prioritisation and execution across Product and Engineering: roadmap, delivery planning, and release coordination.',
       'Drive platform scale and user experience improvements for a product supporting 7k+ daily active users.',
     ],
-    current: true,
   },
   {
     company: 'Enqurious',
