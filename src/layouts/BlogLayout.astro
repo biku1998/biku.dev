@@ -45,6 +45,20 @@ const showToc = headings.filter((h) => h.depth === 2 || h.depth === 3).length >=
       </div>
     </header>
 
+    {
+      image && (
+        <div class="mb-8 md:mb-12 rounded-md overflow-hidden border border-border">
+          <img
+            src={image}
+            alt=""
+            class="w-full aspect-[1200/630] object-cover"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      )
+    }
+
     {showToc && <TableOfContents headings={headings} />}
 
     <div class="prose prose-neutral dark:prose-invert max-w-none">

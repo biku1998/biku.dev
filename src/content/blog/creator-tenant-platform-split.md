@@ -3,6 +3,7 @@ title: "Re-architecting into Creator Platform + Client Tenant Platform: the spli
 description: "When your product serves multiple personas, the fastest way to slow down is to pretend they're all the same system. How we split by domain, change-rate, and risk at Enqurious."
 pubDate: 2025-02-08
 tags: ["engineering", "architecture", "product"]
+image: "/og/creator-tenant-platform-split.png"
 ---
 
 When your product serves multiple personas, the fastest way to slow down is to pretend they're all the same system.

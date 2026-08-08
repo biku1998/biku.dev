@@ -44,6 +44,7 @@ const { tag, posts } = Astro.props;
           pubDate={post.data.pubDate}
           tags={post.data.tags}
           readingTime={getReadingTime(post.body)}
+          image={post.data.image}
         />
       ))
     }

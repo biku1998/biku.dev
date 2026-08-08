@@ -39,6 +39,7 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
           pubDate={post.data.pubDate}
           tags={post.data.tags}
           readingTime={getReadingTime(post.body)}
+          image={post.data.image}
         />
       ))
     }

@@ -15,12 +15,12 @@
 
   <rect x="80" y="80" width="5" height="470" fill="#fb3f03" rx="2.5"/>
 
-  <text x="112" y="122" font-family="ui-monospace, 'SF Mono', 'Courier New', monospace" font-size="13" font-weight="600" letter-spacing="3" fill="#6b7280">ENGINEERING · AI · AGENTS</text>
+  <text x="112" y="122" font-family="ui-monospace, 'SF Mono', 'Courier New', monospace" font-size="13" font-weight="600" letter-spacing="3" fill="#6b7280">PERSONAL · ANNOUNCEMENT</text>
 
-  <text x="112" y="282" font-family="'Geist', 'Helvetica Neue', Arial, sans-serif" font-size="74" font-weight="600" letter-spacing="-0.02em"><tspan fill="#191919">The prompt</tspan></text>
-  <text x="112" y="374" font-family="'Geist', 'Helvetica Neue', Arial, sans-serif" font-size="74" font-weight="600" letter-spacing="-0.02em"><tspan fill="#191919">isn't the </tspan><tspan fill="#fb3f03" dx="20">fix.</tspan></text>
+  <text x="112" y="282" font-family="'Geist', 'Helvetica Neue', Arial, sans-serif" font-size="74" font-weight="600" letter-spacing="-0.02em"><tspan fill="#191919">Hello,</tspan></text>
+  <text x="112" y="374" font-family="'Geist', 'Helvetica Neue', Arial, sans-serif" font-size="74" font-weight="600" letter-spacing="-0.02em"><tspan fill="#fb3f03">world.</tspan></text>
 
-  <text x="112" y="448" font-family="ui-monospace, 'SF Mono', 'Courier New', monospace" font-size="20" font-weight="500" fill="#6b7280">It's the harness. Same model, 6x the results.</text>
+  <text x="112" y="448" font-family="ui-monospace, 'SF Mono', 'Courier New', monospace" font-size="20" font-weight="500" fill="#6b7280">Welcome to my new portfolio and blog.</text>
   
 
   <rect x="80" y="516" width="1040" height="1" fill="#e5e7eb"/>
