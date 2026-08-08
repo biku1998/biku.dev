@@ -14,8 +14,10 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
 ---
 
 <PageLayout title="Blog" description="Thoughts on engineering, product, and building software.">
+  <div class="accent-bar mb-4" />
+  <p class="text-eyebrow text-accent mb-3">Writing</p>
   <h1 class="text-headline-lg mb-2">Blog</h1>
-  <p class="text-body-md text-muted mb-8">Thoughts on engineering, product, and building software.</p>
+  <p class="text-body-md text-muted mb-8 max-w-xl">Thoughts on engineering, product, and building software.</p>
 
   {
     allTags.length > 0 && (

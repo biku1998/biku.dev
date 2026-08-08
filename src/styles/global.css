@@ -26,6 +26,9 @@
   --color-accent: #fb3f03;
   --color-accent-hover: #f24a10;
   --color-accent-contrast: #ffffff;
+  --color-accent-soft: #fb3f0314;
+  --color-accent-soft-strong: #fb3f0326;
+  --color-header-bg: #fafafacc;
 }
 
 /* Dark mode overrides */
@@ -38,6 +41,9 @@
   --color-accent: #fb3f03;
   --color-accent-hover: #ff5a1f;
   --color-accent-contrast: #ffffff;
+  --color-accent-soft: #fb3f0326;
+  --color-accent-soft-strong: #fb3f033d;
+  --color-header-bg: #141414cc;
 }
 
 /* Base styles */
@@ -91,6 +97,14 @@ html.theme-transition *::after {
   background-color: var(--color-accent-hover);
 }
 
+.bg-accent-soft {
+  background-color: var(--color-accent-soft);
+}
+
+.bg-header {
+  background-color: var(--color-header-bg);
+}
+
 .text-foreground {
   color: var(--color-foreground);
 }
@@ -113,6 +127,10 @@ html.theme-transition *::after {
 
 .border-accent {
   border-color: var(--color-accent);
+}
+
+.border-accent-soft {
+  border-color: var(--color-accent-soft-strong);
 }
 
 .hover\:text-accent:hover {
@@ -143,6 +161,10 @@ html.theme-transition *::after {
   border-color: var(--color-accent);
 }
 
+.hover\:bg-accent-soft:hover {
+  background-color: var(--color-accent-soft);
+}
+
 /*
  * Typography system (AI Hero design tokens).
  * Headlines/body copy use the sans (Geist) face; labels, eyebrows, metrics
@@ -151,17 +173,17 @@ html.theme-transition *::after {
  */
 .text-headline-display {
   font-family: var(--font-sans);
-  font-weight: 400;
-  font-size: 2.25rem;
-  line-height: 1.05;
-  letter-spacing: -0.025em;
+  font-weight: 500;
+  font-size: 2.75rem;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
 }
 
 @media (min-width: 640px) {
   .text-headline-display {
-    font-size: 3rem;
-    line-height: 1.05;
-    letter-spacing: -0.025em;
+    font-size: 3.75rem;
+    line-height: 1;
+    letter-spacing: -0.035em;
   }
 }
 
@@ -270,6 +292,65 @@ html.theme-transition *::after {
   letter-spacing: -0.03em;
 }
 
+/* Section kicker: small accent rule used above section headings */
+.accent-bar {
+  display: inline-block;
+  width: 2.25rem;
+  height: 3px;
+  border-radius: 9999px;
+  background-color: var(--color-accent);
+}
+
+/* Soft decorative glow used behind the hero portrait */
+.hero-glow {
+  position: absolute;
+  inset: -18%;
+  z-index: -1;
+  border-radius: 9999px;
+  background: radial-gradient(circle, var(--color-accent) 0%, transparent 72%);
+  opacity: 0.32;
+  filter: blur(32px);
+  pointer-events: none;
+}
+
+.dark .hero-glow {
+  opacity: 0.4;
+}
+
+/* Sticky header surface */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-header-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Nav pills */
+.nav-link {
+  border-radius: 9999px;
+  padding: 0.4rem 0.85rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: var(--color-card);
+}
+
+.nav-link-active {
+  background-color: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+/* Stats row */
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
 /* Buttons */
 .btn {
   display: inline-flex;
@@ -349,6 +430,12 @@ a.chip:hover {
 .chip-md {
   font-size: 0.75rem;
   padding: 4px 12px;
+}
+
+.chip-accent {
+  background-color: var(--color-accent-soft);
+  border-color: var(--color-accent-soft-strong);
+  color: var(--color-accent);
 }
 
 /* Prose styling for blog content */

@@ -28,12 +28,16 @@ const { company, role, period, description, highlights = [], current = false, is
         ? 'bg-accent border-accent'
         : 'bg-background border-border',
     ]}
+    style={current ? { boxShadow: '0 0 0 4px var(--color-accent-soft)' } : undefined}
   />
 
   <!-- Content -->
   <div class="min-w-0">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-1">
-      <h3 class="text-label-lg text-foreground">{role}</h3>
+      <h3 class="text-label-lg text-foreground flex items-center gap-2">
+        {role}
+        {current && <span class="chip chip-sm chip-accent">current</span>}
+      </h3>
       <span class="text-label-sm text-muted whitespace-nowrap">{period}</span>
     </div>
     <p class="text-body-sm text-accent mb-2">{company}</p>

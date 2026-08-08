@@ -24,6 +24,8 @@ const { tag, posts } = Astro.props;
 ---
 
 <PageLayout title={`Posts tagged "${tag}"`} description={`All posts tagged with ${tag}`}>
+  <div class="accent-bar mb-4" />
+  <p class="text-eyebrow text-accent mb-3">Writing</p>
   <h1 class="text-headline-lg mb-2">
     Tagged: <span class="text-accent">{tag}</span>
   </h1>
