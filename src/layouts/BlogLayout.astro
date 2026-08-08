@@ -28,8 +28,8 @@ const showToc = headings.filter((h) => h.depth === 2 || h.depth === 3).length >=
 <PageLayout title={title} description={description} image={image} article={true}>
   <article>
     <header class="mb-8 md:mb-12">
-      <h1 class="text-2xl md:text-3xl font-bold mb-4">{title}</h1>
-      <div class="flex flex-wrap items-center gap-4 text-sm text-muted">
+      <h1 class="text-headline-md mb-4">{title}</h1>
+      <div class="flex flex-wrap items-center gap-4 text-label-sm text-muted">
         <time datetime={pubDate.toISOString()}>
           {formatDate(pubDate)}
         </time>

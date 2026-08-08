@@ -7,13 +7,13 @@ const navItems = [
 const currentPath = Astro.url.pathname;
 ---
 
-<nav class="flex items-center gap-6 text-sm">
+<nav class="flex items-center gap-6">
   {
     navItems.map((item) => (
       <a
         href={item.href}
         class:list={[
-          'transition-colors hover:text-accent',
+          'text-label-md transition-colors hover:text-accent',
           currentPath === item.href ||
           (item.href !== '/' && currentPath.startsWith(item.href))
             ? 'text-foreground'

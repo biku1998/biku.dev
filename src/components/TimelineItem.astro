@@ -33,16 +33,16 @@ const { company, role, period, description, highlights = [], current = false, is
   <!-- Content -->
   <div class="min-w-0">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-1">
-      <h3 class="font-medium text-foreground">{role}</h3>
-      <span class="text-xs text-muted whitespace-nowrap">{period}</span>
+      <h3 class="text-label-lg text-foreground">{role}</h3>
+      <span class="text-label-sm text-muted whitespace-nowrap">{period}</span>
     </div>
-    <p class="text-sm text-accent mb-2">{company}</p>
-    <p class="text-sm text-muted leading-relaxed">{description}</p>
+    <p class="text-body-sm text-accent mb-2">{company}</p>
+    <p class="text-body-sm text-muted leading-relaxed">{description}</p>
 
     {highlights.length > 0 && (
       <ul class="mt-3 space-y-2">
         {highlights.map((highlight) => (
-          <li class="text-sm text-muted leading-relaxed flex gap-2">
+          <li class="text-body-sm text-muted leading-relaxed flex gap-2">
             <span class="text-accent mt-1 shrink-0">•</span>
             <span>{highlight}</span>
           </li>

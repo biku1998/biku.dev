@@ -1,6 +1,7 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import Timeline from '../components/Timeline.astro';
+import Button from '../components/Button.astro';
 import { getCollection } from 'astro:content';
 import { formatDateShort } from '../lib/utils';
 
@@ -21,10 +22,10 @@ const recentPosts = (await getCollection('blog'))
         alt="Sourabh Kumar"
         class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover"
       />
-      <h1 class="text-2xl md:text-3xl font-bold">👋 I'm Sourabh</h1>
+      <h1 class="text-headline-display">👋 I'm Sourabh</h1>
     </div>
 
-    <div class="space-y-4 text-muted leading-relaxed">
+    <div class="space-y-4 text-body-md text-muted">
       <p>
         I'm a Product Engineer driving AI from idea to production. Currently working as Technical Lead at <a
           href="https://www.qualitykiosk.com"
@@ -59,7 +60,7 @@ const recentPosts = (await getCollection('blog'))
   {
     recentPosts.length > 0 && (
       <section class="mt-12">
-        <h2 class="text-lg font-medium mb-6">Recent Writing</h2>
+        <h2 class="text-headline-sm mb-6">Recent Writing</h2>
         <ul class="space-y-4">
           {recentPosts.map((post) => (
             <li>
@@ -67,20 +68,17 @@ const recentPosts = (await getCollection('blog'))
                 href={`/blog/${post.id}`}
                 class="group flex justify-between items-baseline gap-4"
               >
-                <span class="group-hover:text-accent transition-colors">{post.data.title}</span>
-                <span class="text-sm text-muted shrink-0">
+                <span class="text-body-md group-hover:text-accent transition-colors">{post.data.title}</span>
+                <span class="text-label-sm text-muted shrink-0">
                   {formatDateShort(post.data.pubDate)}
                 </span>
               </a>
             </li>
           ))}
         </ul>
-        <a
-          href="/blog"
-          class="inline-block mt-6 text-sm text-accent hover:underline underline-offset-2"
-        >
+        <Button href="/blog" variant="link" class="mt-6">
           View all posts →
-        </a>
+        </Button>
       </section>
     )
   }

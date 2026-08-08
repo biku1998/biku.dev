@@ -8,19 +8,16 @@ interface Props {
 const { tag, size = 'md', linked = false } = Astro.props;
 
 const sizeClasses = {
-  sm: 'text-xs px-1.5 py-0.5',
-  md: 'text-sm px-2 py-1',
+  sm: 'chip-sm',
+  md: 'chip-md',
 };
 
-const baseClasses = `inline-block rounded bg-border/50 text-muted ${sizeClasses[size]}`;
+const baseClasses = `chip ${sizeClasses[size]}`;
 ---
 
 {
   linked ? (
-    <a
-      href={`/tags/${tag}`}
-      class={`${baseClasses} hover:bg-border hover:text-foreground transition-colors`}
-    >
+    <a href={`/tags/${tag}`} class={`${baseClasses} transition-colors`}>
       {tag}
     </a>
   ) : (
