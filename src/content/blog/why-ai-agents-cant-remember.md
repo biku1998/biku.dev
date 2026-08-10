@@ -4,7 +4,7 @@ description: "The problem at the heart of every AI agent, why the obvious soluti
 pubDate: 2026-02-19
 tags: ["engineering", "ai", "product"]
 draft: false
-image: "/og/why-ai-agents-cant-remember.png"
+image: "/blog-posters/Four.png"
 ---
 
 You mention to your AI assistant that you're vegetarian. A few days later you ask for restaurant recommendations. It suggests a steakhouse.
