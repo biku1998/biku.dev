@@ -3,21 +3,19 @@ import TimelineItem from './TimelineItem.astro';
 import { experiences } from '../data/experience';
 ---
 
-<section class="mt-12">
-  <h2 class="text-lg font-medium mb-6">Experience</h2>
-  <div class="relative">
-    {
-      experiences.map((exp, index) => (
-        <TimelineItem
-          company={exp.company}
-          role={exp.role}
-          period={exp.period}
-          description={exp.description}
-          highlights={exp.highlights}
-          current={exp.current}
-          isLast={index === experiences.length - 1}
-        />
-      ))
-    }
-  </div>
-</section>
+<h2 class="text-headline-sm mb-8">Experience</h2>
+<div class="relative">
+  {
+    experiences.map((exp, index) => (
+      <TimelineItem
+        company={exp.company}
+        role={exp.role}
+        period={exp.period}
+        description={exp.description}
+        highlights={exp.highlights}
+        current={exp.current}
+        isLast={index === experiences.length - 1}
+      />
+    ))
+  }
+</div>

@@ -1,6 +1,7 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
+import Button from '../../components/Button.astro';
 import { getReadingTime } from '../../lib/utils';
 import { getCollection } from 'astro:content';
 
@@ -23,15 +24,17 @@ const { tag, posts } = Astro.props;
 ---
 
 <PageLayout title={`Posts tagged "${tag}"`} description={`All posts tagged with ${tag}`}>
-  <h1 class="text-2xl md:text-3xl font-bold mb-2">
+  <div class="accent-bar mb-4" />
+  <p class="text-eyebrow text-accent mb-3">Writing</p>
+  <h1 class="text-headline-lg mb-2">
     Tagged: <span class="text-accent">{tag}</span>
   </h1>
-  <p class="text-muted mb-8">
+  <p class="text-body-md text-muted mb-8">
     {posts.length}
     {posts.length === 1 ? 'post' : 'posts'} found
   </p>
 
-  <div class="space-y-2">
+  <div class="space-y-3">
     {
       posts.map((post) => (
         <BlogCard
@@ -41,15 +44,13 @@ const { tag, posts } = Astro.props;
           pubDate={post.data.pubDate}
           tags={post.data.tags}
           readingTime={getReadingTime(post.body)}
+          image={post.data.image}
         />
       ))
     }
   </div>
 
-  <a
-    href="/blog"
-    class="inline-block mt-8 text-sm text-accent hover:underline underline-offset-2"
-  >
+  <Button href="/blog" variant="link" class="mt-8">
     ← Back to all posts
-  </a>
+  </Button>
 </PageLayout>

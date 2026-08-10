@@ -3,6 +3,7 @@ title: "MVP to 7k DAU with a tiny team: what we built, what we refused to build"
 description: "The story of how an MVP grew into a platform with 7k daily active users while the engineering team stayed tiny. What we built, and what we deliberately refused to build."
 pubDate: 2025-02-03
 tags: ["engineering", "product", "startup"]
+image: "/blog-posters/Five.png"
 ---
 
 In 2020, we weren't "building a product." We were duct-taping an experiential upskilling program together using tools like Google Classroom, Google Colab notebooks, Slack apps, and spreadsheets.

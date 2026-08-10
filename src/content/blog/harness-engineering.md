@@ -4,7 +4,7 @@ description: "Prompt-tuning can't fix systematic agent failures. Harness enginee
 pubDate: 2026-04-30
 tags: ["engineering", "ai", "agents"]
 draft: false
-image: "/og/harness-engineering.png"
+image: "/blog-posters/Eight.png"
 ---
 
 Your agent writes an import that breaks the architectural layer your team has spent two years defending.

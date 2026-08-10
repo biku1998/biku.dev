@@ -1,30 +1,46 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import Timeline from '../components/Timeline.astro';
+import Button from '../components/Button.astro';
 import { getCollection } from 'astro:content';
 import { formatDateShort } from '../lib/utils';
+import { siteConfig } from '../data/site';
+import { experiences } from '../data/experience';
 
-const recentPosts = (await getCollection('blog'))
+const posts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 3);
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const recentPosts = posts.slice(0, 3);
+const currentRole = experiences.find((exp) => exp.current) ?? experiences[0];
+
+const stats = [
+  { value: '6+', label: 'Years experience' },
+  { value: '7k+', label: 'Users impacted' },
+  { value: String(posts.length), label: 'Posts published' },
+];
 ---
 
 <PageLayout
   title="Sourabh Kumar"
   description="Full-stack product engineer and engineering leader with 6+ years building and scaling web platforms. Technical Lead at QualityKiosk, working on AI initiatives and products."
 >
-  <section class="space-y-6">
-    <div class="flex items-center gap-4">
+  <section class="relative">
+    <div class="relative inline-flex mb-6">
+      <div class="hero-glow" aria-hidden="true" />
       <img
         src="/me.png"
         alt="Sourabh Kumar"
-        class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover"
+        class="relative w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-accent-soft"
       />
-      <h1 class="text-2xl md:text-3xl font-bold">👋 I'm Sourabh</h1>
     </div>
 
-    <div class="space-y-4 text-muted leading-relaxed">
+    <p class="text-eyebrow text-accent mb-3">
+      {currentRole.role} · {currentRole.company}
+    </p>
+    <h1 class="text-headline-display mb-6">👋 I'm Sourabh</h1>
+
+    <div class="space-y-4 text-body-md text-muted max-w-xl">
       <p>
         I'm a Product Engineer driving AI from idea to production. Currently working as Technical Lead at <a
           href="https://www.qualitykiosk.com"
@@ -52,14 +68,47 @@ const recentPosts = (await getCollection('blog'))
         >stammers</a>, and over the past few years I've largely overcome it by deliberately putting myself in uncomfortable situations.
       </p>
     </div>
+
+    <div class="flex flex-wrap items-center gap-3 mt-8">
+      <Button href={siteConfig.links.email} variant="primary">Get in touch</Button>
+      <Button
+        href={siteConfig.links.github}
+        variant="secondary"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        View GitHub
+      </Button>
+    </div>
+
+    <dl class="mt-12 pt-8 border-t border-border flex flex-wrap gap-x-10 gap-y-6">
+      {stats.map((stat) => (
+        <div class="stat-item">
+          <dt class="sr-only">{stat.label}</dt>
+          <dd class="text-metric text-foreground">{stat.value}</dd>
+          <p class="text-label-sm text-muted" aria-hidden="true">{stat.label}</p>
+        </div>
+      ))}
+    </dl>
   </section>
 
-  <Timeline />
+  <section class="mt-20 md:mt-24 pt-16 border-t border-border">
+    <div class="accent-bar mb-4" />
+    <p class="text-eyebrow text-muted mb-8">Career</p>
+    <Timeline />
+  </section>
 
   {
     recentPosts.length > 0 && (
-      <section class="mt-12">
-        <h2 class="text-lg font-medium mb-6">Recent Writing</h2>
+      <section class="mt-20 md:mt-24 pt-16 border-t border-border">
+        <div class="accent-bar mb-4" />
+        <p class="text-eyebrow text-muted mb-8">Writing</p>
+        <div class="flex items-baseline justify-between gap-4 mb-6">
+          <h2 class="text-headline-sm">Recent Writing</h2>
+          <Button href="/blog" variant="link">
+            View all →
+          </Button>
+        </div>
         <ul class="space-y-4">
           {recentPosts.map((post) => (
             <li>
@@ -67,20 +116,14 @@ const recentPosts = (await getCollection('blog'))
                 href={`/blog/${post.id}`}
                 class="group flex justify-between items-baseline gap-4"
               >
-                <span class="group-hover:text-accent transition-colors">{post.data.title}</span>
-                <span class="text-sm text-muted shrink-0">
+                <span class="text-body-md group-hover:text-accent transition-colors">{post.data.title}</span>
+                <span class="text-label-sm text-muted shrink-0">
                   {formatDateShort(post.data.pubDate)}
                 </span>
               </a>
             </li>
           ))}
         </ul>
-        <a
-          href="/blog"
-          class="inline-block mt-6 text-sm text-accent hover:underline underline-offset-2"
-        >
-          View all posts →
-        </a>
       </section>
     )
   }

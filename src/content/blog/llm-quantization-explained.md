@@ -4,7 +4,7 @@ description: "You don't need to be a researcher to make smart choices when downl
 pubDate: 2026-06-20
 tags: ["ai", "engineering", "llm"]
 draft: false
-image: "/og/llm-quantization-explained.png"
+image: "/blog-posters/Six.png"
 ---
 
 You want to run a model locally. You open Ollama, search for Llama, and you're hit with a wall of cryptic names:

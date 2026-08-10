@@ -3,6 +3,7 @@ title: "Hello World"
 description: "Welcome to my new portfolio and blog. Here's what I'm building and why."
 pubDate: 2024-01-15
 tags: ["personal", "announcement"]
+image: "/blog-posters/One.png"
 ---
 
 Welcome to my corner of the internet. I'm Sourabh Kumar, a Product Engineer currently leading engineering and product at [Enqurious](https://enqurious.com).

@@ -16,9 +16,9 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
 
 {toc.length > 0 && (
-  <nav class="mb-8 rounded-lg border border-border bg-card">
+  <nav class="mb-8 rounded-md border border-border bg-card">
     <details class="group">
-      <summary class="flex items-center justify-between cursor-pointer p-4 text-sm font-medium select-none">
+      <summary class="flex items-center justify-between cursor-pointer p-4 text-label-md select-none">
         <span>Table of Contents</span>
         <svg
           class="w-4 h-4 text-muted transition-transform group-open:rotate-180"
@@ -29,7 +29,7 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
         </svg>
       </summary>
-      <ul class="px-4 pb-4 space-y-2 text-sm">
+      <ul class="px-4 pb-4 space-y-2 text-body-sm">
         {toc.map((heading) => (
           <li class={heading.depth === 3 ? 'ml-4' : ''}>
             <a
