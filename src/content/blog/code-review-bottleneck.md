@@ -19,7 +19,7 @@ This has a name now. Some people call it the review crisis, others the AI produc
 
 ## The bottleneck didn't go away. It moved.
 
-Start with the part nobody disputes: individuals are faster. In [GitHub's controlled Copilot experiment](https://arxiv.org/abs/2302.06590), developers with the assistant finished a task 55.8% faster. Google's randomized trial on its own engineers landed around 21%. Somewhere between 20 and 55% is the range you'll see quoted for well-scoped tasks.
+Start with the individual. On well-scoped tasks, controlled studies have measured real speedups. In [GitHub's controlled Copilot experiment](https://arxiv.org/abs/2302.06590), developers with the assistant finished one specific task, writing an HTTP server in JavaScript, 55.8% faster. Google's randomized trial on its own engineers landed around 21%. Results vary by setting, and not every study finds a speedup, but 20 to 55% is the range you'll see quoted for tasks like these.
 
 Then look at what happens once that output hits the team.
 
@@ -41,7 +41,7 @@ Their [2026 follow-up](https://www.faros.ai/blog/ai-acceleration-whiplash-takeaw
 
 That last one is what an overwhelmed system looks like. When the queue can't be cleared, people stop queueing.
 
-To be fair to the data, the 2026 report does show delivery finally accelerating: epics completed per developer are up 66%. It also shows bugs up 54% and production incidents up 242.7%. Teams are shipping more. They're also shipping more of what a review would have caught.
+To be fair to the data, the 2026 report does show delivery finally accelerating: epics completed per developer are up 66%. It also shows bugs up 54% and the incidents-to-PR ratio up 242.7%. Teams are shipping more. The data can't say how much of that a proper review would have caught. My bet is a lot of it.
 
 A team ships safely at the speed of its slowest step. Writing code used to be that step. It isn't anymore, so making it faster doesn't make the team better. It makes the pile in front of the reviewer taller.
 
