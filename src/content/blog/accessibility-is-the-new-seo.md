@@ -60,7 +60,7 @@ Three things surprised me.
 
 **Screenshots are cheaper than you'd think, and that's not the point.** One viewport costs about 1,300 tokens, less than most of these snapshots. But a screenshot tells the model where pixels are, not what they mean. It has to work out "that blue rectangle is probably the submit button", estimate coordinates (Anthropic's own docs call coordinate outputs "approximate"), act, and then take another screenshot to see if it worked. Text in a screenshot also has to be read back by a vision model, so anything small or low-contrast gets lost.
 
-So the honest version of the claim isn't "the accessibility tree is always smallest." It's this: **the accessibility tree is the only representation that gives the agent both meaning and a reliable handle to act on, at a cost that doesn't explode with your frontend stack.**
+So the honest version of the claim isn't "the accessibility tree is always smallest." It's this: **the accessibility tree is the one structured view that combines meaning with a reliable handle for the agent to act on, at a cost that doesn't explode with your frontend stack.** Hand-written selectors and clean HTML can carry meaning and targets too, but someone has to write the selectors, and the HTML only stays clean if the whole stack keeps it that way.
 
 There's a catch. The tree is only as good as your markup.
 
@@ -148,7 +148,7 @@ The [WebAIM Million](https://webaim.org/projects/million/) scans the home pages 
 
 Every one of those last three is an element an agent can't name. An unlabelled input is a field the agent has to guess about. An empty button is the cart icon from the example above.
 
-And it's getting harder, not easier. The average home page now has **1,437 elements**, a 22.5% jump in a single year. More UI, same broken semantics.
+And it's getting harder, not easier. The average home page now has **1,437 elements**, a 14.3% jump in a single year. More UI, same broken semantics.
 
 ## Don't turn ARIA into keyword stuffing
 
@@ -172,7 +172,7 @@ Open the Elements panel, go to the **Accessibility** tab, and tick **Enable full
 
 ### 2) A one-off snapshot
 
-Playwright can print the same kind of snapshot I used above:
+Playwright can print the same kind of snapshot I used above. The `mode: "ai"` option (Playwright 1.59+) gives you the agent format, with refs:
 
 ```ts
 import { chromium } from "playwright";
@@ -182,7 +182,7 @@ const page = await browser.newPage();
 await page.goto("https://your-app.com/pricing");
 // Wait for the real UI, not just the HTML shell
 await page.getByRole("button", { name: "Upgrade to Pro" }).waitFor();
-console.log(await page.locator("body").ariaSnapshot());
+console.log(await page.locator("body").ariaSnapshot({ mode: "ai" }));
 await browser.close();
 ```
 
@@ -190,7 +190,7 @@ Read it as if you were the agent. Could you complete the task from this text alo
 
 Two things to watch for. First, timing. On a client-rendered app, the tree right after page load can be a spinner and an empty `main`. Wait for an element you know belongs to the finished page, as above. Playwright's docs discourage the tempting `networkidle` shortcut in favour of waiting on what you actually expect.
 
-Second, iframes. `ariaSnapshot()` on the page shows an embedded frame as a bare `- iframe` line and doesn't descend into it. The snapshot Playwright MCP gives agents does: when I tested a cross-origin iframe, its fields came through with their own refs (`f1e2`, `f1e3`). So if your checkout embeds a payment form, your debugging view and the agent's view will differ. Check the frame separately with `page.frameLocator("iframe")`.
+Second, iframes. Without `mode: "ai"`, `ariaSnapshot()` shows an embedded frame as a bare `- iframe` line and doesn't descend into it. The AI mode does: when I tested a cross-origin iframe, its fields came through with their own refs (`f1e2`, `f1e3`). So if your checkout embeds a payment form, make sure you're looking at the same view the agent gets, not the default one.
 
 ### 3) A test that keeps it fixed
 
@@ -216,13 +216,13 @@ If someone rewrites the button as a styled `<div>`, the test fails. That's a har
 
 Most of this is basic accessibility. That's the point.
 
-1. **Use native elements.** `<button>` for actions, `<a href>` for navigation, `<select>` or a proper combobox for choices. A `div` with `onclick` is invisible.
+1. **Use native elements.** `<button>` for actions, `<a href>` for navigation, `<select>` or a proper combobox for choices. A `div` with `onclick` stays a `generic` node: it never exposes a button's role, name and keyboard behaviour, or a select's options and current value, so neither agents nor screen readers can tell it does anything.
 2. **Label every input.** A visible `<label>`, not just a placeholder. Placeholders disappear as soon as someone types.
 3. **Name every icon-only control.** Cart, close, menu, settings. If the button has no text, it needs an `aria-label`, and the icon needs `aria-hidden="true"`.
 4. **Write button text that says what happens.** "Upgrade to Pro" beats "Submit". An agent with five buttons on screen picks by name.
 5. **Give the page structure.** One `<main>`, real headings in order, `<nav>` for navigation. Landmarks let the agent jump straight to the part it needs.
 6. **Expose state.** `aria-expanded` on things that open, `aria-selected` or `aria-checked` on things that are chosen, real `disabled` on things that can't be used yet. Otherwise the agent clicks and has no idea what changed.
-7. **Make modals real dialogs.** `role="dialog"`, a name, and focus moved into it. Lee called out modals specifically as a reason agents fall back to clicking pixels.
+7. **Make modals real dialogs.** Use the native `<dialog>` element opened with `showModal()`. You get the dialog role, focus moved into it, the rest of the page made inert, and focus returned to the triggering element on close. Give it a name with `aria-labelledby`. Lee called out modals specifically as a reason agents fall back to clicking pixels.
 8. **Don't hide actions behind hover.** If a control only appears on mouseover, an agent reading the tree may never know it exists.
 9. **Keep the important stuff out of `<canvas>`.** A chart is fine. A checkout form drawn on canvas has no tree at all.
 10. **Don't block the agents you want.** A perfect tree doesn't help if your bot protection stops the agent at the door. Blanket "block all automation" rules will catch user-directed agents along with scrapers. Major agents now identify themselves cryptographically: ChatGPT's cloud browser [signs its requests with Web Bot Auth](https://help.openai.com/en/articles/11845367-chatgpt-works-cloud-browser-allowlisting), and Cloudflare recognises [signed agents](https://blog.cloudflare.com/signed-agents/) as their own category. Decide on purpose which ones you let through.
