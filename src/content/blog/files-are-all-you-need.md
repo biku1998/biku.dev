@@ -126,11 +126,17 @@ import path from "node:path";
 
 const run = promisify(execFile);
 const day = (d = new Date()) => d.toISOString().slice(0, 10);
-const read = (p) => readFile(p, "utf8").catch(() => "");
+// A missing file is an empty layer. Any other error is a real problem.
+const read = (p) =>
+  readFile(p, "utf8").catch((e) => {
+    if (e.code === "ENOENT") return "";
+    throw e;
+  });
 const exists = (p) => lstat(p).then(() => true, () => false);
 
 export function createMemory(root) {
-  const file = (...p) => path.join(root, ...p);
+  // Every path, including the ones built in code, goes through safe().
+  const file = (...p) => safe(path.join(...p));
   // safe(), scratchFiles() and liveScratch() from below go here.
 
   return {
@@ -152,9 +158,9 @@ async buildContext(now = new Date()) {
   const yesterday = new Date(now.getTime() - 86_400_000);
   const scratch = await liveScratch(now);
   return [
-    "## About the user (always true)\n" + (await read(file("core.md"))),
-    "## Log: yesterday\n" + (await read(file("log", `${day(yesterday)}.md`))),
-    "## Log: today\n" + (await read(file("log", `${day(now)}.md`))),
+    "## About the user (always true)\n" + (await read(await file("core.md"))),
+    "## Log: yesterday\n" + (await read(await file("log", `${day(yesterday)}.md`))),
+    "## Log: today\n" + (await read(await file("log", `${day(now)}.md`))),
     "## Scratchpad (expires soon)\n" + scratch.map((s) => s.body).join("\n"),
     "Older logs and notes are in your memory directory. Search them with memory_search.",
   ].join("\n\n");
@@ -165,15 +171,17 @@ Logging is an append. The scratchpad puts its expiry in the file name, so expiri
 
 ```js
 async log(entry, now = new Date()) {
-  await mkdir(file("log"), { recursive: true });
+  await mkdir(await file("log"), { recursive: true });
   const time = now.toISOString().slice(11, 16);
-  await appendFile(file("log", `${day(now)}.md`), `- ${time} ${entry}\n`);
+  await appendFile(await file("log", `${day(now)}.md`), `- ${time} ${entry}\n`);
 },
 
 async scratch(name, body, ttlMinutes = 60, now = new Date()) {
-  await mkdir(file("scratch"), { recursive: true });
+  // The model picks the name, so keep it to a plain slug.
+  if (!/^[\w-]+$/.test(name)) throw new Error(`Bad scratch name: ${name}`);
+  await mkdir(await file("scratch"), { recursive: true });
   const expires = now.getTime() + ttlMinutes * 60_000;
-  await writeFile(file("scratch", `${expires}-${name}.md`), body);
+  await writeFile(await file("scratch", `${expires}-${name}.md`), body);
 },
 ```
 
@@ -181,12 +189,16 @@ The search tool is grep. It returns file names and line numbers, so the agent ca
 
 ```js
 async search(pattern, { regex = false } = {}) {
+  const mode = regex ? "-E" : "-F";
+  const args = ["-rni", mode, "--include=*.md", "-e", pattern, root];
+  const clean = (out) => out.split(root + path.sep).join("").slice(0, 4_000);
   try {
-    const mode = regex ? "-E" : "-F";
-    const { stdout } = await run("grep", ["-rni", mode, "--include=*.md", "-e", pattern, root]);
-    return stdout.split(root + path.sep).join("").slice(0, 4_000);
+    // maxBuffer stops grep once it has printed enough, instead of buffering every match.
+    const { stdout } = await run("grep", args, { maxBuffer: 16_000 });
+    return clean(stdout);
   } catch (e) {
     if (e.code === 1) return "No matches.";
+    if (e.code === "ERR_CHILD_PROCESS_STDIO_MAXBUFFER") return clean(e.stdout);
     throw e;
   }
 },
@@ -206,35 +218,40 @@ The same goes for paths. Anthropic's docs warn that a path like `/memories/../..
 
 ```js
 async function safe(p) {
-  const full = path.resolve(root, p.replace(/^\/+/, ""));
+  await mkdir(root, { recursive: true });
+  const realRoot = await realpath(root);
+  const full = path.resolve(realRoot, p.replace(/^\/+/, ""));
   let existing = full;
   while (!(await exists(existing))) existing = path.dirname(existing);
-  const [real, realRoot] = await Promise.all([realpath(existing), realpath(root)]);
+  const real = await realpath(existing);
   if (real !== realRoot && !real.startsWith(realRoot + path.sep)) throw new Error(`Path outside memory: ${p}`);
-  return full;
+  // Return the resolved path, so the links we just checked aren't followed again.
+  return path.join(real, path.relative(existing, full));
 }
 ```
 
 The loop matters for writes: the file doesn't exist yet, so it checks the nearest folder that does. A dangling symlink fails `realpath`, so it's rejected too.
+
+This is still check-then-use. An agent running shell commands at the same moment could swap a folder for a symlink between the check and the write. Node has no portable way to open a path while refusing symlinks at every level, so don't make this function your security boundary. The sandbox is. Run the agent as a user that can only touch its own memory folder, and treat `safe()` as the guard against honest mistakes and simple attacks.
 
 Finally, a sweep job runs on a schedule, outside the agent loop, and deletes expired scratch notes:
 
 ```js
 async sweep(now = new Date()) {
   const expired = (await scratchFiles()).filter((f) => Number(f.split("-")[0]) <= now.getTime());
-  await Promise.all(expired.map((f) => rm(file("scratch", f))));
+  await Promise.all(expired.map(async (f) => rm(await file("scratch", f))));
   return expired;
 },
 
 // Only files: a stray folder in scratch/ shouldn't crash the job.
 async function scratchFiles() {
-  const entries = await readdir(file("scratch"), { withFileTypes: true }).catch(() => []);
+  const entries = await readdir(await file("scratch"), { withFileTypes: true }).catch(() => []);
   return entries.filter((e) => e.isFile()).map((e) => e.name);
 }
 
 async function liveScratch(now) {
   const live = (await scratchFiles()).filter((f) => Number(f.split("-")[0]) > now.getTime()).sort();
-  return Promise.all(live.map(async (f) => ({ name: f, body: await read(file("scratch", f)) })));
+  return Promise.all(live.map(async (f) => ({ name: f, body: await read(await file("scratch", f)) })));
 }
 ```
 
