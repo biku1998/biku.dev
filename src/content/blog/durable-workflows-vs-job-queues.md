@@ -34,7 +34,7 @@ A job queue doesn't know what your job did. It only knows whether the job finish
 That's a deliberate design, and every major queue documents it:
 
 - **Amazon SQS** has an [at-least-once delivery model](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html). If you don't process and delete a message before its visibility timeout expires, "due to application errors, crashes, or connectivity problems," the message becomes visible again and another consumer gets it.
-- **Celery** with [`acks_late`](https://docs.celeryq.dev/en/stable/userguide/tasks.html) acknowledges a task after it runs, which "means the task may be executed multiple times should the worker crash in the middle of execution. Make sure your tasks are idempotent." The default, acknowledging *before* running, avoids that by risking the opposite: a task that crashes halfway is never run again.
+- **Celery** with [`acks_late`](https://docs.celeryq.dev/en/stable/userguide/tasks.html) acknowledges a task after it runs, which "means the task may be executed multiple times should the worker crash in the middle of execution. Make sure your tasks are idempotent." The default, acknowledging *before* running, avoids that by risking the opposite: a task that crashes halfway is never run again. Even with `acks_late`, the [docs note](https://docs.celeryq.dev/en/stable/userguide/configuration.html) that a task is still acknowledged if the child process running it is killed, say by the out-of-memory killer. `task_reject_on_worker_lost` requeues it instead, with a warning that it "can cause message loops" when a task keeps killing its process.
 - **BullMQ** marks a job as [stalled](https://docs.bullmq.io/guide/workers/stalled-jobs) if the worker stops renewing its lock, and "a stalled job is moved back to the waiting status and will be processed again by another worker."
 
 At-least-once is the right default for most work. A thumbnail that gets resized twice costs you a few milliseconds.
@@ -80,7 +80,7 @@ if (crashAfterEmail) process.exit(137); // deploy, OOM kill, spot instance gone
 await llm("summarise what happened for the CRM", 800);
 ```
 
-The durable version uses a toy runner: about 20 lines that journal each step's result to a JSON file and replay it on restart. **It's a teaching toy, not a replacement for Temporal.** It has no timeouts, retries, concurrency or locking. But it shows the core idea:
+The durable version uses a toy runner: about 25 lines that journal each step's result to a JSON file and replay it on restart. **It's a teaching toy, not a replacement for Temporal.** It has no timeouts, retries, concurrency or locking. But it shows the core idea:
 
 ```js
 export function durableRun(runId) {
@@ -99,7 +99,10 @@ export function durableRun(runId) {
     }
     const result = await fn();
     journal.push({ name, result });
-    writeFileSync(file, JSON.stringify(journal, null, 2)); // record before moving on
+    // Record before moving on. Write a temp file, then rename: a crash mid-write keeps the old journal.
+    const tmp = new URL(`./journal-${runId}.json.tmp`, import.meta.url);
+    writeFileSync(tmp, JSON.stringify(journal, null, 2));
+    renameSync(tmp, file);
     return result;
   };
 }
@@ -149,6 +152,8 @@ The LLM calls are still saved: those steps were already recorded. But without an
 
 The fix is an idempotency key: a value that stays the same across retries of one step and is unique to that step. The service you call uses it to spot repeats. [Stripe](https://docs.stripe.com/api/idempotent_requests) is the standard example: send the same `Idempotency-Key` again, and "you can safely repeat the request without risk of creating a second object or performing the update twice." Temporal suggests building the key from the workflow's run ID and the activity ID, "since this is guaranteed to be consistent across retry attempts but unique among Workflow Executions."
 
+That covers retries, not resets. Resetting a workflow starts a new execution, with a new run ID, so a run-ID key won't stop the email going out again. A key from the workflow ID and activity ID survives a reset, but it's reused by any later execution that reuses the same workflow ID. If a repeat must never happen, key it on the business operation itself, like `follow-up:acme:2026-11-22`, and have the provider enforce it.
+
 The key is enforced by the service you call, not by your code. If your email provider, payment API or internal service doesn't accept one, that's the gap to close first.
 
 ## What breaks durable workflows: non-determinism
@@ -170,11 +175,11 @@ On the first run it picked `search-docs`, then crashed. On the replay, `Math.ran
 random branch, attempt 2: Error: Non-determinism: step 2 was "search-docs" in the journal, now "search-web"
 ```
 
-The recorded history and the code disagree, so there's no safe way to continue. Temporal fails the same way, with a non-determinism error.
+The recorded history and the code disagree, so there's no safe way to continue.
 
-The same thing happens with `Date.now()`, reading a file, calling an API directly from workflow code, or deploying new code that adds or reorders steps while runs are in flight. The fixes:
+Temporal fails the same way when replayed code asks for different steps than its history recorded, though not on this exact example: its TypeScript SDK [replaces `Math.random()` and `Date.now()`](https://docs.temporal.io/develop/typescript/workflows/basics) inside workflows with versions that return the same values on replay. What still breaks it is the same class of thing: reading a file or calling an API directly from workflow code, or deploying new code that adds or reorders steps while runs are in flight. The fixes:
 
-- **Put anything non-deterministic in a step.** The step's result is recorded, so replays see the same value. For small values like a UUID, Temporal has a [Side Effect](https://docs.temporal.io/workflow-execution/event) that "executes the provided function once and records its result." Some engines handle the common cases for you: [Vercel's Workflow](https://useworkflow.dev/docs/foundations/workflows-and-steps) fixes `Math.random` and `Date` inside workflow functions so "the values don't change across replays."
+- **Put anything non-deterministic in a step.** The step's result is recorded, so replays see the same value. For small values like a UUID, Temporal's Go, Java and PHP SDKs have a [Side Effect](https://docs.temporal.io/workflow-execution/event) that "executes the provided function once and records its result." TypeScript doesn't have one: use a Local Activity, which the docs say fits "the same use case", or the SDK's replay-safe `uuid4()`. Some engines handle the common cases for you: [Vercel's Workflow](https://useworkflow.dev/docs/foundations/workflows-and-steps) fixes `Math.random` and `Date` inside workflow functions so "the values don't change across replays."
 - **Version your workflow code.** Temporal has [versioning and patching](https://docs.temporal.io/workflow-definition) for changing code while old runs are still going. Plan for it before your first deploy, not after your first non-determinism error.
 
 ## The same agent in Temporal
