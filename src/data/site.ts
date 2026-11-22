@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "Sourabh Kumar",
   title: "Sourabh Kumar - Product Engineer",
   description:
-    "Product Engineer and Technical Lead at QualityKiosk, working on AI initiatives and products. Previously spent 6+ years building learning platforms at Enqurious.",
+    "Product Engineer and Technical Lead at QKTech, working on AI initiatives and products. Previously spent 6+ years building learning platforms at Enqurious.",
   url: "https://biku.dev",
   ogImage: "/me-talking-at-tech-sparks.webp",
   author: {
