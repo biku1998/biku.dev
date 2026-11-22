@@ -145,9 +145,8 @@ export type Pick =
 
 export async function pickPlugins(request: string, recent: string, plugins: Record<string, Plugin>): Promise<Pick> {
   const criteria = Object.fromEntries(Object.entries(plugins).map(([name, p]) => [name, p.description]));
-  if (Object.keys(criteria).length > 255) throw new Error("A Jev choice takes at most 255 options");
-
   try {
+    if (Object.keys(criteria).length > 255) throw new Error("A Jev choice takes at most 255 options");
     const { answers } = await jev.systemOne(
       {
         state: { request, recent_context: recent },
@@ -207,6 +206,8 @@ const loaded = new Set<string>();
 
 export async function turn(userText: string) {
   const recent = lastAssistantText(messages);
+  const start = messages.length;
+  const added: string[] = [];
   messages.push({ role: "user", content: userText });
 
   const pick = await pickPlugins(userText, recent, plugins);
@@ -218,24 +219,37 @@ export async function turn(userText: string) {
         role: "system",
         content: fresh.map((t) => ({ type: "tool_addition" as const, tool: { type: "tool_reference" as const, name: t.name } })),
       });
-      fresh.forEach((t) => loaded.add(t.name));
+      fresh.forEach((t) => {
+        loaded.add(t.name);
+        added.push(t.name);
+      });
     }
   }
 
-  const response = await claude.beta.messages.create({
-    model: "claude-opus-5-5",
-    max_tokens: 16000,
-    betas: ["mid-conversation-tool-changes-2026-07-01", "server-side-fallback-2026-07-01"],
-    fallbacks: "default",
-    cache_control: { type: "ephemeral" },
-    system: "You help the user with their work. You can search for tools for GitHub, the calendar and billing.",
-    tools,
-    messages,
-  });
+  let response;
+  try {
+    response = await claude.beta.messages.create({
+      model: "claude-opus-5-5",
+      max_tokens: 16000,
+      betas: ["mid-conversation-tool-changes-2026-07-01", "server-side-fallback-2026-07-01"],
+      fallbacks: "default",
+      cache_control: { type: "ephemeral" },
+      system: "You help the user with their work. You can search for tools for GitHub, the calendar and billing.",
+      tools,
+      messages,
+    });
+  } catch (err) {
+    // Undo this turn, so a retry starts from the same state.
+    messages.length = start;
+    added.forEach((name) => loaded.delete(name));
+    throw err;
+  }
   messages.push({ role: "assistant", content: response.content });
   return response; // Run any tool_use blocks in your usual loop.
 }
 ```
+
+This sketch keeps one conversation in module-level `messages` and `loaded`. It doesn't isolate overlapping calls or separate conversations, so in a real service keep that state per conversation and run one turn at a time. If the Claude request fails, the turn is rolled back, so a retry starts from the same state.
 
 Mid-conversation tool changes are a beta (`mid-conversation-tool-changes-2026-07-01`), available on recent Claude models. Anthropic's guidance draws the line in the same place this post does: tool search is for *discovery*, where Claude finds what it needs by itself, and tool additions are for *control*, where your application decides the tool set has changed. Jev turns the first into the second.
 

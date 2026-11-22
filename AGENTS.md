@@ -42,7 +42,7 @@ pnpm build      # Production build → dist/
 pnpm preview    # Preview production build locally
 ```
 
-Astro 7 allows one dev server per project. If `pnpm dev` prints "Dev server already running", one is already up, possibly started in the background by a tool. Use it at http://localhost:4321, follow its output with `pnpm astro dev logs --follow`, or stop it with `pnpm astro dev stop` and run `pnpm dev` again.
+Astro 7 allows one dev server per project. If `pnpm dev` prints "Dev server already running", one is already up, possibly started in the background by a tool. Use it at the URL Astro prints (or check `pnpm astro dev status`), follow its output with `pnpm astro dev logs --follow`, or stop it with `pnpm astro dev stop` and run `pnpm dev` again.
 
 After any build, validate that `dist/` is generated without errors before considering a task complete.
 
