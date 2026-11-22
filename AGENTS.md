@@ -20,13 +20,13 @@ The site intentionally stays minimal. Do not add complexity, dependencies, or "n
 
 | Layer | Technology | Version |
 |---|---|---|
-| Framework | Astro | `^5.16.15` |
-| Styling | Tailwind CSS v4 | `^4.1.18` |
-| Typography | @tailwindcss/typography | `^0.5.19` |
-| Tailwind integration | @tailwindcss/vite | `^4.1.18` |
-| Font | Geist Mono Variable | `^5.2.7` |
-| RSS | @astrojs/rss | `^4.0.15` |
-| Sitemap | @astrojs/sitemap | `^3.7.0` |
+| Framework | Astro | `^7.2.0` |
+| Styling | Tailwind CSS v4 | `^4.3.3` |
+| Typography | @tailwindcss/typography | `^0.5.20` |
+| Tailwind integration | @tailwindcss/vite | `^4.3.3` |
+| Fonts | Geist Variable, Geist Mono Variable | `^5.3.0` |
+| RSS | @astrojs/rss | `^4.0.19` |
+| Sitemap | @astrojs/sitemap | `^3.7.3` |
 | Language | TypeScript (strict) | via Astro |
 | Deployment | Vercel | static output |
 
@@ -41,6 +41,8 @@ pnpm dev        # Start dev server (http://localhost:4321)
 pnpm build      # Production build → dist/
 pnpm preview    # Preview production build locally
 ```
+
+Astro 7 allows one dev server per project. If `pnpm dev` prints "Dev server already running", one is already up, possibly started in the background by a tool. Use it at http://localhost:4321, follow its output with `pnpm astro dev logs --follow`, or stop it with `pnpm astro dev stop` and run `pnpm dev` again.
 
 After any build, validate that `dist/` is generated without errors before considering a task complete.
 
