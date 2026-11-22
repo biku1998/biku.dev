@@ -9,6 +9,7 @@ export async function GET(context: { site: URL }) {
     title: siteConfig.name,
     description: siteConfig.description,
     site: context.site,
+    trailingSlash: false,
     items: posts
       .filter((post) => !post.data.draft)
       .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -16,7 +17,7 @@ export async function GET(context: { site: URL }) {
         title: post.data.title,
         pubDate: post.data.pubDate,
         description: post.data.description,
-        link: `/blog/${post.id}/`,
+        link: `/blog/${post.id}`,
       })),
   });
 }

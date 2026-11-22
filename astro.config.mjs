@@ -6,6 +6,8 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://biku.dev',
+  // Canonical URLs, the sitemap and internal links all use paths without a trailing slash.
+  trailingSlash: 'never',
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],
