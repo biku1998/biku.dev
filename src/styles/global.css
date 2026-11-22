@@ -284,14 +284,6 @@ html.theme-transition *::after {
   text-transform: uppercase;
 }
 
-.text-metric {
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: 1.5rem;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-}
-
 /* Section kicker: small accent rule used above section headings */
 .accent-bar {
   display: inline-block;
@@ -345,10 +337,34 @@ html.theme-transition *::after {
 }
 
 /* Stats row */
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+.latest-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: 100%;
+  padding: 0.3rem 0.85rem 0.3rem 0.3rem;
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  background-color: var(--color-card);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--color-foreground);
+  transition: border-color 0.2s ease;
+}
+
+.latest-pill:hover {
+  border-color: var(--color-accent);
+}
+
+.latest-pill-badge {
+  flex: none;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  background-color: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
 }
 
 /* Buttons */
