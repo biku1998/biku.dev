@@ -11,14 +11,9 @@ const posts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
+const latestPost = posts[0];
 const recentPosts = posts.slice(0, 3);
 const currentRole = experiences.find((exp) => exp.current) ?? experiences[0];
-
-const stats = [
-  { value: '6+', label: 'Years experience' },
-  { value: '7k+', label: 'Users impacted' },
-  { value: String(posts.length), label: 'Posts published' },
-];
 ---
 
 <PageLayout
@@ -26,6 +21,18 @@ const stats = [
   description="Full-stack product engineer and engineering leader with 6+ years building and scaling web platforms. Technical Lead at QKTech, working on AI initiatives and products."
 >
   <section class="relative">
+    {
+      latestPost && (
+        <div class="mb-8">
+          <a href={`/blog/${latestPost.id}`} class="latest-pill group">
+            <span class="latest-pill-badge">New post</span>
+            <span class="truncate group-hover:text-accent transition-colors">{latestPost.data.title}</span>
+            <span class="text-muted group-hover:text-accent transition-colors" aria-hidden="true">→</span>
+          </a>
+        </div>
+      )
+    }
+
     <div class="relative inline-flex mb-6">
       <div class="hero-glow" aria-hidden="true" />
       <img
@@ -80,16 +87,6 @@ const stats = [
         View GitHub
       </Button>
     </div>
-
-    <dl class="mt-12 pt-8 border-t border-border flex flex-wrap gap-x-10 gap-y-6">
-      {stats.map((stat) => (
-        <div class="stat-item">
-          <dt class="sr-only">{stat.label}</dt>
-          <dd class="text-metric text-foreground">{stat.value}</dd>
-          <p class="text-label-sm text-muted" aria-hidden="true">{stat.label}</p>
-        </div>
-      ))}
-    </dl>
   </section>
 
   <section class="mt-20 md:mt-24 pt-16 border-t border-border">
