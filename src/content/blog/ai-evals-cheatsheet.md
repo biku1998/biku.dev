@@ -1,7 +1,7 @@
 ---
 title: "The AI Evals Cheatsheet: Everything on One Page"
 description: "A one-page, printable reference for evaluating AI products: traces, error analysis, choosing a grader, writing an LLM judge you can trust, and the traps to avoid. Built around one running example, with templates you can copy."
-pubDate: 2026-11-22
+pubDate: 2026-11-22T12:00:00Z
 tags: ["engineering", "ai", "evals"]
 draft: false
 image: "/blog-posters/Six.png"
